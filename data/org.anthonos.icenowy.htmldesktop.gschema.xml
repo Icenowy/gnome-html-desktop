@@ -8,5 +8,29 @@
         Default URI of the desktop
       </description>
     </key>
+    <key name="left-margin" type="i">
+      <default>0</default>
+      <description>
+        The left margin of the desktop.
+      </description>
+    </key>
+    <key name="right-margin" type="i">
+      <default>0</default>
+      <description>
+        The right margin of the desktop.
+      </description>
+    </key>
+    <key name="top-margin" type="i">
+      <default>32</default>
+      <description>
+        The top margin of the desktop.
+      </description>
+    </key>
+    <key name="bottom-margin" type="i">
+      <default>0</default>
+      <description>
+        The bottom margin of the desktop.
+      </description>
+    </key>
   </schema>
 </schemalist>

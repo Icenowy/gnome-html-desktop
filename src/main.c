@@ -32,19 +32,35 @@
 
 #define GSETTINGS_SCHEMA_ID "org.anthonos.icenowy.htmldesktop"
 #define GSETTINGS_URI_KEY "uri"
+#define GSETTINGS_MARGIN_KEY_SUFFIX "-margin"
 
 static struct GnomeHTMLDesktop {
 	GtkWindow *window;
 	WebKitWebView *view;
 	GSettings *settings;
 	gulong size_changed_id;
+	gint32 left_margin, right_margin, top_margin, bottom_margin;
 } main_desktop;
 
 typedef struct GnomeHTMLDesktop GnomeHTMLDesktop;
 
 static void init_settings (GnomeHTMLDesktop *desktop)
 {
+	GVariant *value;
 	desktop->settings = g_settings_new (GSETTINGS_SCHEMA_ID);
+	#define LOAD_MARGIN(a) \
+	value = g_settings_get_value (desktop->settings, #a GSETTINGS_MARGIN_KEY_SUFFIX); \
+	if (!g_variant_type_equal (g_variant_get_type (value), G_VARIANT_TYPE_INT32)) { \
+		g_critical ("Wrong type for the " #a " margin: %s.", g_variant_get_type_string (value)); \
+		exit (1); \
+	} \
+	desktop->a##_margin = g_variant_get_int32 (value);
+
+	LOAD_MARGIN(left)
+	LOAD_MARGIN(right)
+	LOAD_MARGIN(top)
+	LOAD_MARGIN(bottom)
+	#undef LOAD_MARGIN
 }
 
 static void
@@ -53,8 +69,8 @@ gnome_html_desktop_window_screen_size_changed (GdkScreen *screen,
 {
 	int width_request, height_request;
 
-	width_request = gdk_screen_get_width (screen);
-	height_request = gdk_screen_get_height (screen);
+	width_request = gdk_screen_get_width (screen) - main_desktop.left_margin - main_desktop.right_margin;
+	height_request = gdk_screen_get_height (screen) - main_desktop.top_margin - main_desktop.bottom_margin;
 	
 	g_object_set (window,
 		      "width_request", width_request,
@@ -80,7 +96,7 @@ static GtkWindow* create_window (GnomeHTMLDesktop *desktop)
 	gtk_window_set_decorated (GTK_WINDOW (window), false);
 	gtk_window_set_resizable (GTK_WINDOW (window), false);
 
-	gtk_window_move (GTK_WINDOW (window), 0, 0);
+	gtk_window_move (GTK_WINDOW (window), desktop->left_margin, desktop->top_margin);
 	g_object_set_data (G_OBJECT (window), "is_desktop_window", GINT_TO_POINTER (1));
 
 	screen = gdk_screen_get_default ();
