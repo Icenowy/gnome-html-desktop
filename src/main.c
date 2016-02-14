@@ -30,13 +30,22 @@
 
 #include <stdlib.h>
 
+#define GSETTINGS_SCHEMA_ID "org.anthonos.icenowy.htmldesktop"
+#define GSETTINGS_URI_KEY "uri"
+
 static struct GnomeHTMLDesktop {
 	GtkWindow *window;
 	WebKitWebView *view;
+	GSettings *settings;
 	gulong size_changed_id;
 } main_desktop;
 
 typedef struct GnomeHTMLDesktop GnomeHTMLDesktop;
+
+static void init_settings (GnomeHTMLDesktop *desktop)
+{
+	desktop->settings = g_settings_new (GSETTINGS_SCHEMA_ID);
+}
 
 static void
 gnome_html_desktop_window_screen_size_changed (GdkScreen *screen,
@@ -115,10 +124,19 @@ static GtkWindow* create_window (GnomeHTMLDesktop *desktop)
 static WebKitWebView* create_view (GnomeHTMLDesktop *desktop)
 {
 	WebKitWebView *view;
+	GVariant *value;
 
 	view = WEBKIT_WEB_VIEW (webkit_web_view_new ());
 
-	webkit_web_view_load_uri (view, "http://www.baidu.com");
+	value = g_settings_get_value (desktop->settings, GSETTINGS_URI_KEY);
+	if (!g_variant_type_equal (g_variant_get_type (value), G_VARIANT_TYPE_STRING)) {
+		g_critical ("Wrong type for the URI: %s.", g_variant_get_type_string (value));
+		exit (1);
+	}
+
+	webkit_web_view_load_uri (view, g_variant_get_string(value, NULL));
+
+	g_variant_unref(value);
 
 	desktop->view = view;
 
@@ -143,6 +161,8 @@ int main (int argc, char *argv[])
 #endif
 	
 	gtk_init (&argc, &argv);
+
+	init_settings (&main_desktop);
 
 	create_window (&main_desktop);
 	create_view (&main_desktop);

@@ -38,3 +38,5 @@ src/gnome-html-desktop
 po/POTFILES
 po/stamp-it
 po/Makefile.in
+
+data/*.valid

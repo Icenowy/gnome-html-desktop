@@ -35,10 +35,11 @@ LT_INIT
 PKG_CHECK_MODULES(GNOME_HTML_DESKTOP, [gtk+-3.0 webkit2gtk-4.0 x11])
 
 
-
+GLIB_GSETTINGS
 
 AC_OUTPUT([
 Makefile
 src/Makefile
+data/Makefile
 po/Makefile.in
 ])

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<schemalist>
+  <schema id='org.anthonos.icenowy.htmldesktop' path='/org/anthonos/icenowy/htmldesktop/'>
+    <key name="uri" type="s">
+      <default>"https://aosc.io"</default>
+      <description>
+        Default URI of the desktop
+      </description>
+    </key>
+  </schema>
+</schemalist>
