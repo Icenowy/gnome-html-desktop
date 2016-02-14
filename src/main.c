@@ -88,7 +88,7 @@ static GtkWindow* create_window (GnomeHTMLDesktop *desktop)
 		exit (1);
 	}
 
-	gtk_widget_add_events (window, GDK_PROPERTY_CHANGE_MASK);
+	gtk_widget_add_events (GTK_WIDGET (window), GDK_PROPERTY_CHANGE_MASK);
 
 	gtk_window_set_wmclass (GTK_WINDOW (window), "desktop_window", "Nautilus");
 
