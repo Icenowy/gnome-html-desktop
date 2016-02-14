@@ -32,6 +32,7 @@ src/gnome-html-desktop
 /config.guess
 /config.status
 /config.sub
+/config.h
 /libtool
 
 po/POTFILES
