@@ -68,7 +68,7 @@ static GtkWindow* create_window (GnomeHTMLDesktop *desktop)
 	GdkDisplay *display;
 	GdkScreen *screen;
 	char desktop_manager_name[32];
-	GdkAtom desktop_atom, atom;
+	GdkAtom desktop_atom;
 
 	window = GTK_WINDOW (gtk_window_new (GTK_WINDOW_TOPLEVEL));
 	gtk_window_set_title (GTK_WINDOW (window), "GNOME HTML Desktop");
@@ -104,11 +104,7 @@ static GtkWindow* create_window (GnomeHTMLDesktop *desktop)
 	gtk_widget_realize (GTK_WIDGET (window));
 	gdk_flush ();
 
-	atom = gdk_atom_intern ("_NET_WM_WINDOW_TYPE_DESKTOP", FALSE);
-	gdk_property_change (gtk_widget_get_window(GTK_WIDGET(window)),
-		gdk_atom_intern ("_NET_WM_WINDOW_TYPE", FALSE),
-		gdk_x11_xatom_to_atom (XA_ATOM), 32,
-		GDK_PROP_MODE_REPLACE, (guchar *) &atom, 1);
+	gtk_window_set_type_hint(GTK_WINDOW(window), GDK_WINDOW_TYPE_HINT_DESKTOP);
 
 	desktop->size_changed_id =
 		g_signal_connect (gtk_window_get_screen (GTK_WINDOW (window)), "size-changed",
