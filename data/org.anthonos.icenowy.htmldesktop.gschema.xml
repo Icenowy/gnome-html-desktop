@@ -21,7 +21,7 @@
       </description>
     </key>
     <key name="top-margin" type="i">
-      <default>32</default>
+      <default>28</default>
       <description>
         The top margin of the desktop.
       </description>
